@@ -8,37 +8,46 @@
     <artifactId>spring-websocket-wrapper</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <spring-messaging.version>5.1.6.RELEASE</spring-messaging.version>
+        <spring-websocket.version>5.1.6.RELEASE</spring-websocket.version>
+        <javax.websocket-api.version>1.1</javax.websocket-api.version>
+        <jetty-all.version>9.4.15.v20190215</jetty-all.version>
+        <jackson-databind.version>2.9.8</jackson-databind.version>
+        <core.version>3.3.7</core.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
-            <version>4.2.1.RELEASE</version>
+            <version>${spring-messaging.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
-            <version>4.2.1.RELEASE</version>
+            <version>${spring-websocket.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
+            <version>${javax.websocket-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
             <artifactId>jetty-all</artifactId>
             <type>pom</type>
-            <version>9.3.3.v20150827</version>
+            <version>${jetty-all.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.5.0</version>
+            <version>${jackson-databind.version}</version>
         </dependency>
         <dependency>
             <groupId>org.processing</groupId>
             <artifactId>core</artifactId>
-            <version>3.3.7</version>
+            <version>${core.version}</version>
         </dependency>
 
     </dependencies>
