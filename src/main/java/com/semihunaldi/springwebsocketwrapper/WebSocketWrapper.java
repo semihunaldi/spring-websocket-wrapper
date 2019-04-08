@@ -7,10 +7,10 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
-import org.springframework.web.socket.messaging.WebSocketStompClient;
-import org.springframework.web.socket.sockjs.client.SockJsClient;
-import org.springframework.web.socket.sockjs.client.Transport;
-import org.springframework.web.socket.sockjs.client.WebSocketTransport;
+import com.semihunaldi.springwebsocketwrapper.spring.WebSocketStompClient;
+import com.semihunaldi.springwebsocketwrapper.spring.SockJsClient;
+import com.semihunaldi.springwebsocketwrapper.spring.WebSocketTransport;
+import com.semihunaldi.springwebsocketwrapper.spring.sockjs.Transport;
 import org.springframework.web.socket.sockjs.frame.Jackson2SockJsMessageCodec;
 import processing.core.PApplet;
 
@@ -26,6 +26,7 @@ import java.util.Map;
 public class WebSocketWrapper {
 
 	private final static WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
+
 	private StompSession stompSession;
 
 	public WebSocketWrapper(PApplet pApplet, WebSocketSettings webSocketSettings) {
@@ -33,6 +34,7 @@ public class WebSocketWrapper {
 			pApplet.registerMethod("dispose", this);
 		}
 		try{
+			ApplicationContext.getInstance().setCustomSessionId(webSocketSettings.getCustomSessionId());
 			ListenableFuture<StompSession> connect = connect(webSocketSettings);
 			stompSession = connect.get();
 			subscribeToTopics(stompSession, webSocketSettings);

@@ -13,7 +13,24 @@ public class WebSocketSettings {
 
 	private String socketName;
 
+	private String customSessionId;
+
 	private Map<String, WebSocketEvent> listenerMethodBySubscribeTopicMap = new HashMap<>();
+
+	public WebSocketSettings(
+			String host,
+			Integer port,
+			String socketName,
+			String customSessionId,
+			Map<String, WebSocketEvent> listenerMethodBySubscribeTopicMap
+	) {
+		this.customSessionId = customSessionId;
+		this.host = host;
+		this.port = port;
+		this.socketName = socketName;
+		this.listenerMethodBySubscribeTopicMap = listenerMethodBySubscribeTopicMap;
+	}
+
 
 	public WebSocketSettings(
 			String host,
@@ -52,6 +69,14 @@ public class WebSocketSettings {
 
 	public void setSocketName(String socketName) {
 		this.socketName = socketName;
+	}
+
+	public String getCustomSessionId() {
+		return customSessionId;
+	}
+
+	public void setCustomSessionId(String customSessionId) {
+		this.customSessionId = customSessionId;
 	}
 
 	public Map<String, WebSocketEvent> getListenerMethodBySubscribeTopicMap() {
