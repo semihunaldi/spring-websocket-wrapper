@@ -49,7 +49,12 @@ public class WebSocketWrapper {
 		SockJsClient sockJsClient = new SockJsClient(transports);
 		sockJsClient.setMessageCodec(new Jackson2SockJsMessageCodec());
 		WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
-		String url = "ws://{host}:{port}" + (webSocketSettings.getSocketName().startsWith("/") ? webSocketSettings.getSocketName() : "/" + webSocketSettings.getSocketName());
+		String url = "//{host}:{port}" + (webSocketSettings.getSocketName().startsWith("/") ? webSocketSettings.getSocketName() : "/" + webSocketSettings.getSocketName());
+		if(webSocketSettings.isUseSSL()) {
+			url = "wss:" + url;
+		} else {
+			url = "ws:" + url;
+		}
 		return stompClient.connect(url, headers, new MyHandler(), webSocketSettings.getHost(), webSocketSettings.getPort());
 	}
 

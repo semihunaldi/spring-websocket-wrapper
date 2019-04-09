@@ -10,6 +10,7 @@ public class WebSocketSettings {
 
 	private String host;
 	private Integer port;
+	private boolean useSSL;
 
 	private String socketName;
 
@@ -61,6 +62,14 @@ public class WebSocketSettings {
 
 	public void setPort(Integer port) {
 		this.port = port;
+	}
+
+	public boolean isUseSSL() {
+		return useSSL;
+	}
+
+	public void setUseSSL(boolean useSSL) {
+		this.useSSL = useSSL;
 	}
 
 	public String getSocketName() {
