@@ -16,6 +16,11 @@ public class WebSocketSettings {
 
 	private String customSessionId;
 
+	private boolean retry = false;
+	private int retrySeconds = 5;
+
+	private boolean debug = false;
+
 	private Map<String, WebSocketEvent> listenerMethodBySubscribeTopicMap = new HashMap<>();
 
 	public WebSocketSettings(
@@ -86,6 +91,30 @@ public class WebSocketSettings {
 
 	public void setCustomSessionId(String customSessionId) {
 		this.customSessionId = customSessionId;
+	}
+
+	public boolean isRetry() {
+		return retry;
+	}
+
+	public void setRetry(boolean retry) {
+		this.retry = retry;
+	}
+
+	public int getRetrySeconds() {
+		return retrySeconds;
+	}
+
+	public void setRetrySeconds(int retrySeconds) {
+		this.retrySeconds = retrySeconds;
+	}
+
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 	public Map<String, WebSocketEvent> getListenerMethodBySubscribeTopicMap() {

@@ -1,5 +1,6 @@
 package com.semihunaldi.springwebsocketwrapper;
 
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -29,17 +30,30 @@ public class WebSocketWrapper {
 
 	private StompSession stompSession;
 
+	private WebSocketSettings webSocketSettings;
+
+	private WebSocketStompClient stompClient;
+
 	public WebSocketWrapper(PApplet pApplet, WebSocketSettings webSocketSettings) {
+		this.webSocketSettings = webSocketSettings;
 		if(pApplet != null){
 			pApplet.registerMethod("dispose", this);
 		}
+		connectTo(webSocketSettings);
+	}
+
+	private void connectTo(WebSocketSettings webSocketSettings) {
+		ApplicationContext.getInstance().setCustomSessionId(webSocketSettings.getCustomSessionId());
 		try{
-			ApplicationContext.getInstance().setCustomSessionId(webSocketSettings.getCustomSessionId());
 			ListenableFuture<StompSession> connect = connect(webSocketSettings);
 			stompSession = connect.get();
 			subscribeToTopics(stompSession, webSocketSettings);
 		} catch(Exception e){
-			e.printStackTrace();
+			if(webSocketSettings.isDebug()) {
+				e.printStackTrace();
+			} else {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 
@@ -48,7 +62,7 @@ public class WebSocketWrapper {
 		List<Transport> transports = Collections.singletonList(webSocketTransport);
 		SockJsClient sockJsClient = new SockJsClient(transports);
 		sockJsClient.setMessageCodec(new Jackson2SockJsMessageCodec());
-		WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient);
+		stompClient = new WebSocketStompClient(sockJsClient);
 		String url = "//{host}:{port}" + (webSocketSettings.getSocketName().startsWith("/") ? webSocketSettings.getSocketName() : "/" + webSocketSettings.getSocketName());
 		if(webSocketSettings.isUseSSL()) {
 			url = "wss:" + url;
@@ -81,8 +95,34 @@ public class WebSocketWrapper {
 
 	private class MyHandler extends StompSessionHandlerAdapter {
 
+		@Override
 		public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
-			System.out.println("Now connected");
+			System.out.println("Now connected with sessionId : " + stompSession.getSessionId());
+		}
+
+		@Override
+		public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+			super.handleException(session, command, headers, payload, exception);
+		}
+
+		@Override
+		public void handleTransportError(StompSession session, Throwable exception) {
+			super.handleTransportError(session, exception);
+			if(webSocketSettings.isRetry()) {
+				new Thread(() -> {
+					try {
+						Thread.sleep(webSocketSettings.getRetrySeconds() * 1000);
+					} catch (InterruptedException e) {
+						if(webSocketSettings.isDebug()) {
+							e.printStackTrace();
+						} else {
+							System.out.println(e.getMessage());
+						}
+					}
+					stompClient.stop();
+					connectTo(webSocketSettings);
+				}).start();
+			}
 		}
 	}
 
@@ -95,13 +135,10 @@ public class WebSocketWrapper {
 		webSocketSettings.setHost("localhost");
 		webSocketSettings.setPort(8080);
 		webSocketSettings.setSocketName("SOCKET_BASE_PATH");
+		webSocketSettings.setRetry(true);
+		webSocketSettings.setDebug(false);
 		webSocketSettings.addListenerToTopic("/topic/sample", obj -> System.out.println("event return : " + obj));
 		WebSocketWrapper webSocketWrapper = new WebSocketWrapper(null, webSocketSettings);
 		webSocketWrapper.sendMessage("/socket/hello", "TEST MESSAGE");
-		try{
-			Thread.sleep(60000);
-		} catch(InterruptedException e){
-			e.printStackTrace();
-		}
 	}
 }
