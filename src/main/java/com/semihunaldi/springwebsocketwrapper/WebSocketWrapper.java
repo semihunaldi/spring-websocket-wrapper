@@ -93,6 +93,13 @@ public class WebSocketWrapper {
 		stompSession.send(topic, message.getBytes());
 	}
 
+	public void sendMessageToSessionId(String topic, String message, String destinationSessionId) {
+		StompHeaders stompHeaders = new StompHeaders();
+		stompHeaders.setDestination(topic);
+		stompHeaders.add("destinationSessionId",destinationSessionId);
+		stompSession.send(stompHeaders, message.getBytes());
+	}
+
 	private class MyHandler extends StompSessionHandlerAdapter {
 
 		@Override
@@ -140,5 +147,6 @@ public class WebSocketWrapper {
 		webSocketSettings.addListenerToTopic("/topic/sample", obj -> System.out.println("event return : " + obj));
 		WebSocketWrapper webSocketWrapper = new WebSocketWrapper(null, webSocketSettings);
 		webSocketWrapper.sendMessage("/socket/hello", "TEST MESSAGE");
+		webSocketWrapper.sendMessageToSessionId("/socket/hello", "TEST MESSAGE","12345-12345");
 	}
 }
