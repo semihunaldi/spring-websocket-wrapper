@@ -13,7 +13,7 @@
         <spring-websocket.version>5.1.6.RELEASE</spring-websocket.version>
         <javax.websocket-api.version>1.1</javax.websocket-api.version>
         <jetty-all.version>9.4.15.v20190215</jetty-all.version>
-        <jackson-databind.version>2.9.9</jackson-databind.version>
+        <jackson-databind.version>2.9.9.2</jackson-databind.version>
         <core.version>3.3.7</core.version>
     </properties>
 
