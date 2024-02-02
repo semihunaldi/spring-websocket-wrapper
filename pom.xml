@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <spring-messaging.version>5.1.6.RELEASE</spring-messaging.version>
+        <spring-messaging.version>5.2.22.RELEASE</spring-messaging.version>
         <spring-websocket.version>5.1.6.RELEASE</spring-websocket.version>
         <javax.websocket-api.version>1.1</javax.websocket-api.version>
         <jetty-all.version>9.4.15.v20190215</jetty-all.version>
